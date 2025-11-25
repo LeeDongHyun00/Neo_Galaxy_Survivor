@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>네온 갤럭시 서바이버 V7: 모던 프로토콜</title>
+    <meta name="description" content="A modern roguelite space shooter with elite abilities and endless waves">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="uiLayer" class="hidden">
+        <div class="hud">
+            <div>
+                <div id="scoreBoard">SCORE: 0</div>
+                <div id="levelBoard">LV: 1</div>
+            </div>
+            <div id="waveBoard">WAVE: 1</div>
+        </div>
+        <div class="bar-container">
+            <div class="bar-wrap"><div id="healthBar"></div></div>
+            <div class="bar-wrap"><div id="xpBar"></div></div>
+        </div>
+        <div id="leftStickHint" class="joystick-hint">이동<br>(Move)</div>
+        <div id="rightStickHint" class="joystick-hint">방향<br>(Aim)</div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen">
+        <h1>NEON GALAXY<br>SURVIVOR V7</h1>
+        <p style="color:#aaa;">MODERN PROTOCOL ONLINE</p>
+        <input type="text" id="playerNameInput" placeholder="이름을 입력하세요" maxlength="8">
+        <button class="btn" onclick="checkNameAndShowSelection()">DEPLOY</button>
+        <div class="patch-notes">
+            <h3>V7.0 UPDATE</h3>
+            <ul>
+                <li>[신규] 도전 과제 및 리더보드 시스템</li>
+                <li>[개선] 향상된 파티클 효과 및 사운드</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Onboarding -->
+    <div id="onboardingScreen" class="screen hidden">
+        <h2>파일럿 등록 절차</h2>
+        <button class="btn btn-large" onclick="showTutorial()">신병입니다 (처음함)</button>
+        <button class="btn btn-large btn-secondary" onclick="playIntroSequence()">베테랑입니다 (해봤음)</button>
+    </div>
+
+    <!-- Tutorial -->
+    <div id="tutorialScreen" class="screen hidden">
+        <div style="background:rgba(0,20,40,0.95); border:2px solid #00ffff; padding:30px; border-radius:15px; max-width:90%;">
+            <h2 style="color:#00ffff;">조작 훈련</h2>
+            <p style="color:#ddd; line-height:1.6;">PC: WASD 이동 / 마우스 조준<br>Mobile: 좌측 드래그 이동 / 우측 드래그 조준<br><strong style="color:#ffff00;">발사는 자동입니다.</strong></p>
+            <button class="btn" onclick="playIntroSequence()">확인</button>
+        </div>
+    </div>
+
+    <!-- Intro / Respawn Animation -->
+    <div id="introScreen" class="screen hidden" style="background:black; z-index:200;">
+        <div id="storyText" style="color:white; font-size:18px; text-align:center; line-height:1.8; opacity:0; transition:opacity 1s;"></div>
+        <div id="launchShip"></div>
+    </div>
+
+    <!-- Upgrade Screen -->
+    <div id="upgradeScreen" class="screen hidden">
+        <h1 id="upgradeTitle">SYSTEM UPGRADE</h1>
+        <div class="card-container" id="cardContainer"></div>
+    </div>
+
+    <!-- Game Over -->
+    <div id="gameOverScreen" class="screen hidden">
+        <h1>GAME OVER</h1>
+        <p id="finalScoreDisplay">SCORE: 0</p>
+        <p id="bestWaveDisplay" style="color:#ffff00;">BEST WAVE: 1</p>
+        <div>
+            <button class="btn btn-secondary" onclick="goToMainMenu()">MAIN MENU</button>
+            <button class="btn" onclick="triggerRespawn()">RETRY</button>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
