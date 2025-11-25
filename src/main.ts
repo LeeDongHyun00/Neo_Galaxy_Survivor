@@ -155,6 +155,9 @@ class Game {
     this.particleSystem.clear();
     this.wreckage = null;
     
+    // Reset input states to fix mobile restart bug
+    this.inputManager.reset();
+    
     this.uiManager.showUI();
     this.updateUI();
     

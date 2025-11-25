@@ -140,4 +140,17 @@ export class InputManager {
     const mv = this.getMoveVector();
     return mv.x !== 0 || mv.y !== 0;
   }
+
+  reset(): void {
+    // Reset keyboard
+    this.keys = { w: false, a: false, s: false, d: false };
+    
+    // Reset touch states
+    this.touches.leftId = null;
+    this.touches.rightId = null;
+    this.touches.moveVector = { x: 0, y: 0 };
+    this.touches.aimVector = { x: 0, y: 0 };
+    this.touches.leftStart = { x: 0, y: 0 };
+    this.touches.leftCurrent = { x: 0, y: 0 };
+  }
 }
