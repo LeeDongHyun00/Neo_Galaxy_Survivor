@@ -18,13 +18,6 @@ export class ScreenShake {
       const dx = (Math.random() - 0.5) * this.shakeIntensity;
       const dy = (Math.random() - 0.5) * this.shakeIntensity;
       this.ctx.translate(dx, dy);
-      // Or better, let's just modify the context and let the next frame clear handle it?
-      // Wait, if we translate, the next frame clear (fillRect) will be offset too if we don't reset.
-      
-      // Let's rely on the fact that we should reset the transform.
-      setTimeout(() => {
-        this.ctx.translate(-dx, -dy);
-      }, 0);
     }
   }
 }

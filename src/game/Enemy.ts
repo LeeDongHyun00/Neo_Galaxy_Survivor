@@ -90,7 +90,8 @@ export class EnemyManager {
       type,
       r: baseRadius * SCALE_FACTOR,
       color: type === 'tank' ? '#444' : type === 'shooter' ? '#f44' : type === 'exploder' ? '#fa0' : '#0fa',
-      speed: (type === 'tank' ? 1.5 : type === 'exploder' ? 5 : 3 + wave * 0.1) * this.difficultyMultiplier,
+      // Reduced speeds by ~25% for better balance
+      speed: (type === 'tank' ? 1.2 : type === 'exploder' ? 3.5 : 2.2 + wave * 0.075) * this.difficultyMultiplier,
       hp: (type === 'tank' ? 20 + wave : type === 'basic' ? 2 + wave : 5 + wave) * this.difficultyMultiplier,
       xpVal: type === 'tank' ? 50 : type === 'basic' ? 10 : 20,
       shootTimer: Math.random() * 100,

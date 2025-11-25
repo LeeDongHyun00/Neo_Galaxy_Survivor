@@ -8,7 +8,8 @@ import { UIManager } from './ui/UIManager';
 import { AudioManager } from './systems/AudioManager';
 import { UpgradeManager } from './game/PowerUps';
 import { ShipManager } from './game/ShipSystem';
-import { ScreenShake } from './systems/ScreenShake';
+import { ScreenShake } from './systems/ScreenShake.ts';
+import { BackgroundManager } from './effects/Background';
 import { GAME_CONFIG } from './utils/constants';
 
 class Game {
@@ -24,6 +25,7 @@ class Game {
   private upgradeManager: UpgradeManager;
   private shipManager: ShipManager;
   private screenShake: ScreenShake;
+  private backgroundManager: BackgroundManager;
 
   private score: number = 0;
   private wave: number = 1;
@@ -62,6 +64,7 @@ class Game {
     this.audioManager = new AudioManager();
     this.upgradeManager = new UpgradeManager();
     this.screenShake = new ScreenShake(this.ctx);
+    this.backgroundManager = new BackgroundManager(this.canvas.width, this.canvas.height, 100);
 
     this.setupEventHandlers();
     this.updateShipSelectionUI();
@@ -314,6 +317,9 @@ class Game {
     // Background
     this.ctx.fillStyle = '#000';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    // Draw stars
+    this.backgroundManager.update(this.ctx, this.canvas.width, this.canvas.height);
     
     this.ctx.save();
     
