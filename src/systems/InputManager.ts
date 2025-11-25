@@ -89,6 +89,7 @@ export class InputManager {
           y: Math.sin(angle) * distance
         };
       } else if (touch.identifier === this.touches.rightId) {
+        // Direct screen position for faster aiming
         this.touches.aimVector = { x: touch.clientX, y: touch.clientY };
       }
     }
@@ -102,6 +103,7 @@ export class InputManager {
       }
       if (touch.identifier === this.touches.rightId) {
         this.touches.rightId = null;
+        this.touches.aimVector = { x: 0, y: 0 }; // Reset aimVector when right touch ends
       }
     }
   }

@@ -57,7 +57,7 @@ export class EnemyManager {
       x,
       y,
       type,
-      r: type === 'tank' ? 30 : 15,
+      r: type === 'tank' ? 24 : 12,
       color: type === 'tank' ? '#444' : type === 'shooter' ? '#f44' : type === 'exploder' ? '#fa0' : '#0fa',
       speed: type === 'tank' ? 1.5 : type === 'exploder' ? 5 : 3 + wave * 0.1,
       hp: type === 'tank' ? 20 + wave : type === 'basic' ? 2 + wave : 5 + wave,

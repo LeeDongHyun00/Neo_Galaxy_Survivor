@@ -3,7 +3,6 @@ import { Player } from './game/Player';
 import { EnemyManager } from './game/Enemy';
 import { ProjectileManager } from './game/Projectile';
 import { UpgradeManager } from './game/PowerUps';
-import { AchievementManager } from './game/Achievements';
 import { Leaderboard } from './game/Leaderboard';
 import { InputManager } from './systems/InputManager';
 import { AudioManager } from './systems/AudioManager';
@@ -29,14 +28,12 @@ class Game {
   private nextLevelXp: number = GAME_CONFIG.INITIAL_XP_REQUIRED;
   private playerName: string = 'Pilot';
   private killsThisGame: number = 0;
-  private bossKilledThisGame: boolean = false;
   
   // Managers
   private player: Player;
   private enemyManager: EnemyManager;
   private projectileManager: ProjectileManager;
   private upgradeManager: UpgradeManager;
-  private achievementManager: AchievementManager;
   private leaderboard: Leaderboard;
   private inputManager: InputManager;
   private audioManager: AudioManager;
@@ -64,7 +61,6 @@ class Game {
     this.enemyManager = new EnemyManager();
     this.projectileManager = new ProjectileManager();
     this.upgradeManager = new UpgradeManager();
-    this.achievementManager = new AchievementManager();
     this.leaderboard = new Leaderboard();
     this.inputManager = new InputManager(this.canvas);
     this.audioManager = new AudioManager();
@@ -152,7 +148,6 @@ class Game {
     this.level = 1;
     this.nextLevelXp = GAME_CONFIG.INITIAL_XP_REQUIRED;
     this.killsThisGame = 0;
-    this.bossKilledThisGame = false;
     
     this.player.reset(this.canvas.width, this.canvas.height);
     this.enemyManager.clear();
@@ -368,7 +363,6 @@ class Game {
       }
       
       if (enemy.type === 'boss') {
-        this.bossKilledThisGame = true;
         this.particleSystem.createExplosion(enemy.x, enemy.y, 'gold', 50);
         this.uiManager.updateWave(this.wave, false);
         setTimeout(() => this.showUpgrade(true), 1000);
@@ -497,28 +491,15 @@ class Game {
       alpha: 1
     };
     
-    // Update achievements
-    const newAchievements = this.achievementManager.updateStats(
-      this.killsThisGame,
-      this.wave,
-      this.score,
-      this.bossKilledThisGame
-    );
-    
     // Add to leaderboard
     this.leaderboard.addEntry(this.playerName, this.score, this.wave);
     
-    const bestWave = this.achievementManager.getStats().highestWave;
+    // Get best wave from leaderboard
+    const entries = this.leaderboard.getEntries();
+    const bestWave = entries.length > 0 ? Math.max(...entries.map(e => e.wave)) : this.wave;
     
     this.uiManager.hideUI();
     this.uiManager.showGameOver(this.score, bestWave);
-    
-    // Show achievement notifications
-    if (newAchievements.length > 0) {
-      setTimeout(() => {
-        alert(`🏆 새로운 업적!\n${newAchievements.join('\n')}`);
-      }, 500);
-    }
   }
 }
 
