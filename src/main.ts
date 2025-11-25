@@ -256,10 +256,13 @@ class Game {
     // Update entities
     this.updateEntities();
     
-    // Draw joysticks
+    // Draw joysticks for visual feedback
     const touches = this.inputManager.getTouchState();
     if (touches.leftId !== null) {
       this.uiManager.drawJoystick(this.ctx, touches.leftStart, touches.leftCurrent, GAME_CONFIG.COLORS.CYAN);
+    }
+    if (touches.rightId !== null) {
+      this.uiManager.drawJoystick(this.ctx, touches.rightStart, touches.rightCurrent, GAME_CONFIG.COLORS.MAGENTA);
     }
     
     // Particles

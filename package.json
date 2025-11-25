@@ -1,6 +1,6 @@
 {
   "name": "neon-galaxy-survivor",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "type": "module",
   "description": "A modern roguelite space shooter with elite abilities",
   "scripts": {

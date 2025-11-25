@@ -10,6 +10,8 @@ export interface TouchState {
   aimVector: Vector2D;
   leftStart: Vector2D;
   leftCurrent: Vector2D;
+  rightStart: Vector2D;
+  rightCurrent: Vector2D;
 }
 
 export interface KeyState {
@@ -28,8 +30,13 @@ export class InputManager {
     moveVector: { x: 0, y: 0 },
     aimVector: { x: 0, y: 0 },
     leftStart: { x: 0, y: 0 },
-    leftCurrent: { x: 0, y: 0 }
+    leftCurrent: { x: 0, y: 0 },
+    rightStart: { x: 0, y: 0 },
+    rightCurrent: { x: 0, y: 0 }
   };
+  
+  private currentAngle: number = -Math.PI / 2; // Smooth rotation
+  private targetAngle: number = -Math.PI / 2;
 
   constructor(private canvas: HTMLCanvasElement) {
     this.setupEventListeners();
@@ -71,6 +78,7 @@ export class InputManager {
         this.touches.leftStart = this.touches.leftCurrent = { x: touch.clientX, y: touch.clientY };
       } else if (touch.clientX >= this.canvas.width / 2 && this.touches.rightId === null) {
         this.touches.rightId = touch.identifier;
+        this.touches.rightStart = this.touches.rightCurrent = { x: touch.clientX, y: touch.clientY };
       }
     }
   }
@@ -89,8 +97,23 @@ export class InputManager {
           y: Math.sin(angle) * distance
         };
       } else if (touch.identifier === this.touches.rightId) {
-        // Direct screen position for faster aiming
-        this.touches.aimVector = { x: touch.clientX, y: touch.clientY };
+        // Joystick-style aiming for smooth control
+        this.touches.rightCurrent = { x: touch.clientX, y: touch.clientY };
+        const dx = this.touches.rightCurrent.x - this.touches.rightStart.x;
+        const dy = this.touches.rightCurrent.y - this.touches.rightStart.y;
+        const distance = Math.hypot(dx, dy);
+        
+        // Only update if moved more than 10px for stability
+        if (distance > 10) {
+          const angle = Math.atan2(dy, dx);
+          this.targetAngle = angle;
+          
+          // Store for visual feedback
+          this.touches.aimVector = { 
+            x: this.touches.rightStart.x + Math.cos(angle) * Math.min(distance, 50),
+            y: this.touches.rightStart.y + Math.sin(angle) * Math.min(distance, 50)
+          };
+        }
       }
     }
   }
@@ -103,7 +126,7 @@ export class InputManager {
       }
       if (touch.identifier === this.touches.rightId) {
         this.touches.rightId = null;
-        this.touches.aimVector = { x: 0, y: 0 }; // Reset aimVector when right touch ends
+        this.touches.aimVector = { x: 0, y: 0 };
       }
     }
   }
@@ -127,9 +150,22 @@ export class InputManager {
 
   getAimAngle(playerX: number, playerY: number): number {
     if (this.touches.rightId !== null) {
-      return Math.atan2(this.touches.aimVector.y - playerY, this.touches.aimVector.x - playerX);
+      // Smooth interpolation for fluid rotation
+      const angleDiff = this.targetAngle - this.currentAngle;
+      // Handle angle wrapping
+      let shortestAngle = ((angleDiff + Math.PI) % (Math.PI * 2)) - Math.PI;
+      if (shortestAngle < -Math.PI) shortestAngle += Math.PI * 2;
+      
+      // Interpolate with higher speed for responsiveness
+      this.currentAngle += shortestAngle * 0.25; // Increased from typical 0.1 for faster response
+      return this.currentAngle;
     }
-    return Math.atan2(this.mouse.y - playerY, this.mouse.x - playerX);
+    
+    // Mouse aiming - instant
+    const angle = Math.atan2(this.mouse.y - playerY, this.mouse.x - playerX);
+    this.currentAngle = angle; // Keep in sync
+    this.targetAngle = angle;
+    return angle;
   }
 
   getTouchState(): TouchState {
@@ -152,5 +188,11 @@ export class InputManager {
     this.touches.aimVector = { x: 0, y: 0 };
     this.touches.leftStart = { x: 0, y: 0 };
     this.touches.leftCurrent = { x: 0, y: 0 };
+    this.touches.rightStart = { x: 0, y: 0 };
+    this.touches.rightCurrent = { x: 0, y: 0 };
+    
+    // Reset rotation state
+    this.currentAngle = -Math.PI / 2;
+    this.targetAngle = -Math.PI / 2;
   }
 }
