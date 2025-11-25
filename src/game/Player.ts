@@ -1,4 +1,5 @@
-import { GAME_CONFIG, PLAYER_COLORS } from '../utils/constants';
+import { GAME_CONFIG, SCALE_FACTOR } from '../utils/constants';
+import { ShipConfig } from './ShipSystem';
 
 export interface SuperPowers {
   hacking: boolean;
@@ -15,66 +16,89 @@ export interface SuperPowers {
 export interface Drone {
   x: number;
   y: number;
+  angle: number;
   cooldown: number;
 }
 
 export class Player {
   x: number;
   y: number;
-  radius: number = GAME_CONFIG.PLAYER_RADIUS;
-  color: string;
-  speed: number = GAME_CONFIG.PLAYER_SPEED;
-  hp: number = GAME_CONFIG.PLAYER_MAX_HP;
-  maxHp: number = GAME_CONFIG.PLAYER_MAX_HP;
-  projectileCount: number = 1;
-  fireRate: number = GAME_CONFIG.PLAYER_FIRE_RATE;
-  damageMult: number = 1;
-  cooldown: number = 0;
+  radius: number = 15 * SCALE_FACTOR;
   angle: number = -Math.PI / 2;
+  color: string;
   
-  drones: Drone[] = [];
-  superPowers: SuperPowers = {
+  // Stats
+  maxHp: number = 100;
+  hp: number = 100;
+  speed: number = 5;
+  damageMult: number = 1;
+  fireRate: number = 15;
+  cooldown: number = 0;
+  projectileSize: number = 4;
+  projectileCount: number = 1;
+  
+  // Super powers
+  superPowers = {
+    drones: false,
     hacking: false,
-    hackingTimer: 0,
-    regen: false,
-    regenTimer: 0,
     missiles: false,
-    missileTimer: 0,
+    plasma: false,
+    regen: false,
     chain: false,
     timeShift: false,
-    plasma: false
+    
+    // Timers
+    regenTimer: 0,
+    hackingTimer: 0,
+    missileTimer: 0
   };
+  
+  drones: Drone[] = [];
 
-  constructor(canvasWidth: number, canvasHeight: number) {
+  constructor(canvasWidth: number, canvasHeight: number, shipConfig?: ShipConfig) {
     this.x = canvasWidth / 2;
     this.y = canvasHeight / 2;
-    this.color = PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
+    this.color = GAME_CONFIG.COLORS.CYAN;
+    this.reset(canvasWidth, canvasHeight, shipConfig);
   }
 
-  reset(canvasWidth: number, canvasHeight: number): void {
+  update(vector: {x: number, y: number}, canvasWidth: number, canvasHeight: number): void {
+    this.move(vector.x, vector.y, canvasWidth, canvasHeight);
+  }
+
+  reset(canvasWidth: number, canvasHeight: number, shipConfig?: ShipConfig): void {
     this.x = canvasWidth / 2;
     this.y = canvasHeight / 2;
-    this.color = PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
-    this.speed = GAME_CONFIG.PLAYER_SPEED;
-    this.hp = GAME_CONFIG.PLAYER_MAX_HP;
-    this.maxHp = GAME_CONFIG.PLAYER_MAX_HP;
-    this.projectileCount = 1;
-    this.fireRate = GAME_CONFIG.PLAYER_FIRE_RATE;
-    this.damageMult = 1;
-    this.cooldown = 0;
     this.angle = -Math.PI / 2;
-    this.drones = [];
+    this.hp = this.maxHp;
+    this.cooldown = 0;
+    
+    // Reset powers
     this.superPowers = {
+      drones: false,
       hacking: false,
-      hackingTimer: 0,
-      regen: false,
-      regenTimer: 0,
       missiles: false,
-      missileTimer: 0,
+      plasma: false,
+      regen: false,
       chain: false,
       timeShift: false,
-      plasma: false
+      regenTimer: 0,
+      hackingTimer: 0,
+      missileTimer: 0
     };
+    this.drones = [];
+
+    // Apply ship config
+    if (shipConfig) {
+      this.maxHp = shipConfig.maxHp;
+      this.hp = this.maxHp;
+      this.speed = shipConfig.speed;
+      this.damageMult = shipConfig.damageMult;
+      this.fireRate = shipConfig.fireRate;
+      this.projectileSize = shipConfig.projectileSize;
+      this.projectileCount = shipConfig.projectileCount;
+      this.color = shipConfig.color;
+    }
   }
 
   move(dx: number, dy: number, canvasWidth: number, canvasHeight: number): void {

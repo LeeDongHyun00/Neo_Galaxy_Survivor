@@ -32,9 +32,13 @@ export const GAME_CONFIG = {
     RED: '#ff3333',
     WHITE: '#ffffff',
     GOLD: '#ffd700',
-    ORANGE: '#ffaa00'
+    ORANGE: '#ffaa00',
+    PURPLE: '#9d00ff'
   }
 } as const;
+
+export const IS_MOBILE = window.innerWidth < 768;
+export const SCALE_FACTOR = IS_MOBILE ? 0.7 : 1.0;
 
 export const PLAYER_COLORS = [
   '#00ffff', '#ff00ff', '#ffff00', 

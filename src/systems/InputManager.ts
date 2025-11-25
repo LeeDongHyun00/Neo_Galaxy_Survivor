@@ -177,6 +177,13 @@ export class InputManager {
     return mv.x !== 0 || mv.y !== 0;
   }
 
+  isShooting(): boolean {
+    // Mobile: Right stick active
+    if (this.touches.rightId !== null) return true;
+    // Desktop: Always shoot (auto-fire)
+    return true;
+  }
+
   reset(): void {
     // Reset keyboard
     this.keys = { w: false, a: false, s: false, d: false };

@@ -47,6 +47,49 @@ export const COMMON_UPGRADES: Upgrade[] = [
       p.maxHp *= 1.2;
       p.heal(20);
     }
+  },
+  {
+    name: '확산 탄막',
+    desc: '발사체 +2',
+    icon: '💫',
+    apply: (p) => p.projectileCount += 2
+  },
+  {
+    name: '폭발탄',
+    desc: '투사체 크기 +50%',
+    icon: '🎯',
+    apply: (p) => p.projectileSize *= 1.5
+  },
+  {
+    name: '에너지 쉴드',
+    desc: '체력 100% 회복',
+    icon: '💚',
+    apply: (p) => p.heal(p.maxHp)
+  },
+  {
+    name: '연사 시스템',
+    desc: '공속 +30%',
+    icon: '🔫',
+    apply: (p) => p.fireRate *= 0.7
+  },
+  {
+    name: '강화 선체',
+    desc: '최대체력 +50',
+    icon: '🏰',
+    apply: (p) => {
+      p.maxHp += 50;
+      p.heal(50);
+    }
+  },
+  {
+    name: '과부하',
+    desc: '데미지 2배, 최대HP -20%',
+    icon: '⚠️',
+    apply: (p) => {
+      p.damageMult *= 2;
+      p.maxHp *= 0.8;
+      if (p.hp > p.maxHp) p.hp = p.maxHp;
+    }
   }
 ];
 
@@ -57,7 +100,7 @@ export const ELITE_UPGRADES: Upgrade[] = [
     icon: '🛰️',
     isElite: true,
     apply: (p) => {
-      p.drones.push({ x: 0, y: 0, cooldown: 0 });
+      p.drones.push({ x: 0, y: 0, angle: 0, cooldown: 0 });
     }
   },
   {

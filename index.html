@@ -27,18 +27,38 @@
 
     <!-- Start Screen -->
     <div id="startScreen" class="screen">
-        <h1>NEON GALAXY<br>SURVIVOR V7.1</h1>
-        <p style="color:#aaa;">MODERN PROTOCOL ONLINE</p>
-        <input type="text" id="playerNameInput" placeholder="이름을 입력하세요" maxlength="8">
-        <button class="btn" onclick="checkNameAndShowSelection()">DEPLOY</button>
+        <div class="title-container">
+            <h1>NEON GALAXY<br>SURVIVOR</h1>
+        </div>
+        
+        <div class="menu-container">
+            <input type="text" id="playerNameInput" placeholder="파일럿 이름 입력" maxlength="8">
+            
+            <div class="menu-buttons">
+                <button class="btn primary" onclick="checkNameAndShowSelection()">출격 (DEPLOY)</button>
+                <button class="btn secondary" onclick="openShipSelection()">격납고 (HANGAR)</button>
+            </div>
+        </div>
+
         <div class="patch-notes">
-            <h3>V7.1 UPDATE</h3>
+            <h3>최신 업데이트 (V7.4.1)</h3>
             <ul>
-                <li>모바일 조준 속도 향상</li>
-                <li>적 크기 감소 (더 나은 시야)</li>
-                <li>리더보드 시스템</li>
+                <li>[수정] 보스 충돌 버그 수정</li>
+                <li>[밸런스] 보스 체력 30% 감소</li>
+                <li>[밸런스] 적 스폰 증가 (최소 10마리)</li>
+                <li>[신규] 강화 효과 6종 추가</li>
+                <li>[신규] 비행기 고유 능력 추가</li>
             </ul>
         </div>
+    </div>
+
+    <!-- Ship Selection Screen -->
+    <div id="shipSelectionScreen" class="screen hidden">
+        <h2>격납고</h2>
+        <div id="shipList" class="ship-grid">
+            <!-- Populated by JS -->
+        </div>
+        <button class="btn secondary" onclick="closeShipSelection()">뒤로가기</button>
     </div>
 
     <!-- Onboarding -->
@@ -46,6 +66,17 @@
         <h2>파일럿 등록 절차</h2>
         <button class="btn btn-large" onclick="showTutorial()">신병입니다 (처음함)</button>
         <button class="btn btn-large btn-secondary" onclick="playIntroSequence()">베테랑입니다 (해봤음)</button>
+    </div>
+
+    <!-- Story Screen -->
+    <div id="storyScreen" class="screen hidden" style="background: #000;">
+        <div id="storyContainer" style="max-width: 800px; padding: 40px; text-align: center;">
+            <h2 id="storyTitle" style="color: #0ff; margin-bottom: 30px; font-size: 32px;">PROLOGUE</h2>
+            <p id="storyText" style="color: #fff; line-height: 1.8; font-size: 18px; margin-bottom: 40px; white-space: pre-line;">
+                <!-- Populated by JS -->
+            </p>
+            <button id="storyNextBtn" class="btn primary" onclick="nextStory()">NEXT >></button>
+        </div>
     </div>
 
     <!-- Tutorial -->

@@ -44,6 +44,47 @@ export class UIManager {
     const percent = Math.min(100, (current / required) * 100);
     this.xpBar.style.width = `${percent}%`;
   }
+  
+  showBossWarning(): void {
+    const warning = document.createElement('div');
+    warning.style.position = 'absolute';
+    warning.style.top = '30%';
+    warning.style.left = '50%';
+    warning.style.transform = 'translate(-50%, -50%)';
+    warning.style.color = '#f00';
+    warning.style.fontSize = '48px';
+    warning.style.fontWeight = 'bold';
+    warning.style.textShadow = '0 0 20px #f00';
+    warning.style.zIndex = '1000';
+    warning.style.animation = 'blink 0.5s infinite';
+    warning.textContent = 'WARNING: BOSS APPROACHING';
+    document.body.appendChild(warning);
+    
+    setTimeout(() => {
+      document.body.removeChild(warning);
+    }, 3000);
+  }
+  
+  showMessage(text: string): void {
+    const msg = document.createElement('div');
+    msg.style.position = 'absolute';
+    msg.style.top = '20%';
+    msg.style.left = '50%';
+    msg.style.transform = 'translate(-50%, -50%)';
+    msg.style.color = '#0ff';
+    msg.style.fontSize = '32px';
+    msg.style.fontWeight = 'bold';
+    msg.style.textShadow = '0 0 10px #0ff';
+    msg.style.zIndex = '1000';
+    msg.textContent = text;
+    document.body.appendChild(msg);
+    
+    setTimeout(() => {
+      msg.style.transition = 'opacity 1s';
+      msg.style.opacity = '0';
+      setTimeout(() => document.body.removeChild(msg), 1000);
+    }, 2000);
+  }
 
   showUI(): void {
     this.uiLayer.classList.remove('hidden');
@@ -101,6 +142,16 @@ export class UIManager {
     document.getElementById('finalScoreDisplay')!.innerText = `SCORE: ${score}`;
     document.getElementById('bestWaveDisplay')!.innerText = `BEST WAVE: ${bestWave}`;
     this.showScreen('gameOverScreen');
+  }
+
+  showStory(title: string, text: string, onNext: () => void): void {
+    document.getElementById('storyTitle')!.innerText = title;
+    document.getElementById('storyText')!.innerText = text;
+    
+    const btn = document.getElementById('storyNextBtn')!;
+    btn.onclick = onNext;
+    
+    this.showScreen('storyScreen');
   }
 
   drawJoystick(ctx: CanvasRenderingContext2D, start: {x: number, y: number}, current: {x: number, y: number}, color: string): void {
