@@ -25,7 +25,7 @@ export const COMMON_UPGRADES: Upgrade[] = [
     name: '화력 증강',
     desc: '데미지 UP',
     icon: '💥',
-    apply: (p) => p.damageMult += 0.3
+    apply: (p) => p.damageMult += 0.15
   },
   {
     name: '부스터',
@@ -83,10 +83,10 @@ export const COMMON_UPGRADES: Upgrade[] = [
   },
   {
     name: '과부하',
-    desc: '데미지 2배, 최대HP -20%',
+    desc: '데미지 1.5배, 최대HP -20%',
     icon: '⚠️',
     apply: (p) => {
-      p.damageMult *= 2;
+      p.damageMult *= 1.5;
       p.maxHp *= 0.8;
       if (p.hp > p.maxHp) p.hp = p.maxHp;
     }

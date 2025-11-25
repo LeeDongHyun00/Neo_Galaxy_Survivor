@@ -44,8 +44,8 @@ export class EnemyManager {
       
       const bossConfig = bossTypes[bossIndex] || bossTypes[4];
       
-      // Boss HP: Reduced by 50% globally
-      let hp = (500 + wave * 50) * bossConfig.hpMult * 0.5;
+      // Boss HP: Reduced by 35% globally (was 50%, now increased by 30%)
+      let hp = (500 + wave * 50) * bossConfig.hpMult * 0.65;
 
       this.enemies.push({
         x: canvasWidth / 2,

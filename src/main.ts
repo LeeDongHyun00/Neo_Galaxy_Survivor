@@ -46,6 +46,7 @@ class Game {
   private bossSpawnedThisWave: boolean = false;
   private killsThisGame: number = 0;
   private bossKilledThisGame: boolean = false;
+  private pendingBossUpgrade: boolean = false;
 
   constructor() {
     this.canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -529,7 +530,13 @@ class Game {
           this.enemyManager.difficultyMultiplier += 0.2; // Enemies get stronger
           this.uiManager.updateWave(this.wave);
           this.uiManager.showMessage(`WAVE ${this.wave} START!`);
-          this.showUpgrade(true); // Offer upgrade after boss
+          
+          // If player is already in upgrade screen (level up), queue boss upgrade
+          if (this.isPaused) {
+            this.pendingBossUpgrade = true;
+          } else {
+            this.showUpgrade(true); // Offer upgrade after boss
+          }
         }, 2000);
       } else {
         this.particleSystem.createBurst(enemy.x, enemy.y, enemy.color, 5);
@@ -538,6 +545,9 @@ class Game {
       this.score += enemy.xpVal;
       this.gainXp(enemy.xpVal);
       this.killsThisGame++; // Track kills properly
+      
+      // Update UI to show new score
+      this.updateUI();
       
       // Balance: Heal 1 HP on kill
       if (this.player.hp < this.player.maxHp) {
@@ -688,6 +698,14 @@ class Game {
       this.uiManager.hideUpgradeScreen();
       this.isPaused = false;
       this.audioManager.playSound('powerup');
+      
+      // Check if there's a pending boss upgrade to show
+      if (this.pendingBossUpgrade) {
+        this.pendingBossUpgrade = false;
+        setTimeout(() => {
+          this.showUpgrade(true); // Show elite upgrade after level-up upgrade
+        }, 300);
+      }
     });
   }
   
@@ -739,14 +757,19 @@ class Game {
 
   private playEndingStory(): void {
     this.gameActive = false;
-    const story = `적의 모선이 파괴되었다.
+    const story = `2077년 12월 25일, 23:47
     
-    하늘을 뒤덮었던 네온 빛이 사라지고, 다시 푸른 하늘이 드러났다.
+적 함대의 지휘함 OMEGA가 폭발했다.
+하늘을 뒤덮었던 네온 빛이 사라지고, 다시 푸른 하늘이 드러났다.
     
-    당신의 활약으로 지구는 평화를 되찾았다.
-    전설적인 파일럿으로 역사에 기록될 것이다.
+지구 전역의 사람들이 환호성을 지른다.
+당신은 인류를 구한 영웅이 되었다.
     
-    MISSION ACCOMPLISHED.`;
+"잘했다, ${this.playerName}. 넌 최고의 파일럿이야."
+지구방위군 본부에서 통신이 들어온다.
+    
+MISSION ACCOMPLISHED.
+Welcome home, pilot.`;
     
     this.uiManager.showStory("VICTORY", story, () => {
       this.uiManager.hideScreen('storyScreen');

@@ -38,6 +38,7 @@ canvas {
   pointer-events: none;
   display: flex;
   flex-direction: column;
+  z-index: 1000 !important;
 }
 
 .screen {
@@ -50,12 +51,14 @@ canvas {
 
 /* HUD */
 .hud {
+  position: relative;
   display: flex;
   justify-content: space-between;
   padding: 15px;
   font-size: 16px;
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
-  z-index: 50;
+  z-index: 1001 !important;
+  pointer-events: auto;
 }
 
 #scoreBoard {
@@ -95,6 +98,8 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 1001 !important;
+  pointer-events: auto;
 }
 
 .bar-wrap {
@@ -288,6 +293,8 @@ input[type="text"]:focus {
   color: rgba(255, 255, 255, 0.3);
   font-size: 12px;
   text-align: center;
+  z-index: 1001 !important;
+  pointer-events: none;
 }
 
 #leftStickHint {

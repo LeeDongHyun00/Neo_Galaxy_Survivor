@@ -42,7 +42,7 @@ export const SHIPS: Record<ShipType, ShipConfig> = {
     id: ShipType.SPEEDSTER,
     name: "VX-9 레이서",
     description: "빠른 이동 + 공속 20% 증가",
-    unlockCondition: "Wave 8 도달",
+    unlockCondition: "Wave 5 도달",
     maxHp: 60,
     speed: 8,
     damageMult: 0.8,
@@ -55,7 +55,7 @@ export const SHIPS: Record<ShipType, ShipConfig> = {
     id: ShipType.TANK,
     name: "G-05 포트리스",
     description: "고체력 + 투사체 크기 50% 증가",
-    unlockCondition: "총 500킬 달성",
+    unlockCondition: "총 300킬 달성",
     maxHp: 200,
     speed: 3,
     damageMult: 1.5,
@@ -68,7 +68,7 @@ export const SHIPS: Record<ShipType, ShipConfig> = {
     id: ShipType.SNIPER,
     name: "S-77 팬텀",
     description: "고화력 + 투사체 크기 25% 증가",
-    unlockCondition: "Wave 5 클리어",
+    unlockCondition: "Wave 3 도달",
     maxHp: 80,
     speed: 6,
     damageMult: 2.5,
@@ -81,7 +81,7 @@ export const SHIPS: Record<ShipType, ShipConfig> = {
     id: ShipType.ENGINEER,
     name: "T-404 드론",
     description: "기본적으로 2발을 발사하지만 데미지가 낮습니다.",
-    unlockCondition: "총 점수 50,000점 달성",
+    unlockCondition: "총 점수 30,000점 달성",
     maxHp: 120,
     speed: 4,
     damageMult: 0.6,
@@ -187,16 +187,16 @@ export class ShipManager {
   checkUnlocks(currentRunStats: { maxWave: number }): string[] {
     const newUnlocks: string[] = [];
 
-    if (currentRunStats.maxWave >= 8 && this.unlock(ShipType.SPEEDSTER)) {
+    if (currentRunStats.maxWave >= 5 && this.unlock(ShipType.SPEEDSTER)) {
       newUnlocks.push(SHIPS[ShipType.SPEEDSTER].name);
     }
-    if (this.globalStats.totalKills >= 500 && this.unlock(ShipType.TANK)) {
+    if (this.globalStats.totalKills >= 300 && this.unlock(ShipType.TANK)) {
       newUnlocks.push(SHIPS[ShipType.TANK].name);
     }
-    if (currentRunStats.maxWave >= 6 && this.unlock(ShipType.SNIPER)) {
+    if (currentRunStats.maxWave >= 3 && this.unlock(ShipType.SNIPER)) {
       newUnlocks.push(SHIPS[ShipType.SNIPER].name);
     }
-    if (this.globalStats.totalScore >= 50000 && this.unlock(ShipType.ENGINEER)) {
+    if (this.globalStats.totalScore >= 30000 && this.unlock(ShipType.ENGINEER)) {
       newUnlocks.push(SHIPS[ShipType.ENGINEER].name);
     }
 
